@@ -1,6 +1,6 @@
-import { createSlice, PayloadAction, createSelector } from '@reduxjs/toolkit';
-import { Audio } from 'expo-av';
-import { PlayMode, PlayScope } from '../lib/types';
+import {createSlice, PayloadAction, createSelector} from '@reduxjs/toolkit';
+import {Audio} from 'expo-av';
+import {PlayMode, PlayScope} from '../types/types';
 
 export interface AudioState {
   isPlaying: boolean;
@@ -32,19 +32,19 @@ const audioSlice = createSlice({
   name: 'audio',
   initialState,
   reducers: {
-    setCurrentId(state, { payload }: PayloadAction<string>) {
+    setCurrentId(state, {payload}: PayloadAction<string>) {
       state.currentId = payload;
     },
-    setBuffering(state, { payload }: PayloadAction<boolean>) {
+    setBuffering(state, {payload}: PayloadAction<boolean>) {
       state.isBuffering = payload;
     },
-    setCurrentPosition(state, { payload }: PayloadAction<number>) {
+    setCurrentPosition(state, {payload}: PayloadAction<number>) {
       state.currentPosition = payload;
     },
-    setPlaying(state, { payload }: PayloadAction<boolean>) {
+    setPlaying(state, {payload}: PayloadAction<boolean>) {
       state.isPlaying = payload;
     },
-    setPlaybackInstance(state, { payload }: PayloadAction<any>) {
+    setPlaybackInstance(state, {payload}: PayloadAction<any>) {
       state.playbackInstance = payload;
     },
   },

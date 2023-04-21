@@ -1,9 +1,9 @@
 import * as MediaLibrary from 'expo-media-library';
-import {Alert} from 'react-native';
-import {AppThunk} from './store';
-import {Audio, AVPlaybackStatus} from 'expo-av';
-import {setSongs} from './songs';
-import {setLoadingState} from './isLoading';
+import { Alert } from 'react-native';
+import { AppThunk } from './store';
+import { Audio, AVPlaybackStatus } from 'expo-av';
+import { setSongs } from './songs';
+import { setLoadingState } from './isLoading';
 import {
   setBuffering,
   setCurrentId,
@@ -11,9 +11,9 @@ import {
   setPlaybackInstance,
   setPlaying,
 } from './audio';
-import SettingsST from '../lib/SettingsST';
-import {AnyAction, ThunkAction, ThunkDispatch} from '@reduxjs/toolkit';
-import {RootState} from './rootReducer';
+import SettingsST from '../lib/settingsST';
+import { AnyAction, ThunkAction, ThunkDispatch } from '@reduxjs/toolkit';
+import { RootState } from './rootReducer';
 
 export const InitializeApp =
   (): any => async (dispatch: ThunkDispatch<RootState, any, AnyAction>) => {
@@ -25,7 +25,7 @@ export const InitializeApp =
         '권한이 수락되지 않았습니다.',
         '계속이용하실려면 권한을 수락해주세요!',
         [
-          {text: 'Okay!'},
+          { text: 'Okay!' },
           {
             text: '다시 시도하세요!',
             onPress: () => {
@@ -50,9 +50,7 @@ export const InitializeApp =
     ).assets;
 
     audios.sort((s1: any, s2: any) => {
-      return s1?.filename
-        .toLowerCase()
-        .localeCompare(s2?.filename.toLowerCase());
+      return s1?.filename.toLowerCase().localeCompare(s2?.filename.toLowerCase());
     });
 
     console.log(audios[0]?.id);
@@ -70,8 +68,8 @@ export const LoadSong =
     dispatch(setCurrentId(id));
 
     const {
-      audio: {isPlaying, volume, playbackInstance: prevPlaybackInstance},
-      audios: {audios},
+      audio: { isPlaying, volume, playbackInstance: prevPlaybackInstance },
+      audios: { audios },
     }: any = getState();
 
     await prevPlaybackInstance?.unloadAsync();
@@ -118,7 +116,7 @@ export const LoadSong =
 
 export const NextTrack = (): AppThunk => async (dispatch, getState) => {
   const {
-    audio: {currentId},
+    audio: { currentId },
   } = getState() as any;
   const nextSong = SettingsST.getInstance().getNext(currentId) as any;
 

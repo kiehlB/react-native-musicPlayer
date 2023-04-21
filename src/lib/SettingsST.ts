@@ -1,5 +1,5 @@
 import { Song } from '../store/songs';
-import { PlayMode, PlayScope } from './types';
+import { PlayMode, PlayScope } from '../types/types';
 
 export default class SettingsST {
   private static instance: SettingsST;

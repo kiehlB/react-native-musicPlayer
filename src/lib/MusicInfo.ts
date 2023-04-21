@@ -1,7 +1,7 @@
 import * as FileSystem from 'expo-file-system';
 import { decode, encode } from 'base-64';
 
-import Buffer from './Buffer';
+import Buffer from './buffer';
 
 const BUFFER_SIZE = 256 * 1024;
 

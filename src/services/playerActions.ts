@@ -1,7 +1,7 @@
-import { ToastAndroid } from 'react-native';
-import TrackPlayer, { Track } from 'react-native-track-player';
-import { mapToTrack } from '../components/common/mappers';
-import { TrackCardProps } from '../types/TrackCard.types';
+import {ToastAndroid} from 'react-native';
+import TrackPlayer, {Track} from 'react-native-track-player';
+import {mapToTrack} from '../components/common/mappers';
+import {TrackCardProps} from '../types/trackCard.types';
 
 export const playQueue = (list: TrackCardProps[]) => {
   TrackPlayer.reset();

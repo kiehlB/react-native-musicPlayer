@@ -1,6 +1,6 @@
-import { createSlice, PayloadAction, createSelector } from '@reduxjs/toolkit';
-import SettingsST from '../lib/SettingsST';
-import { Lyrics } from '../lib/types';
+import {createSlice, PayloadAction, createSelector} from '@reduxjs/toolkit';
+import {Lyrics} from '../types/types';
+import SettingsST from '../lib/settingsST';
 
 export interface Song {
   id?: string;
@@ -31,19 +31,19 @@ const songsSlice = createSlice({
   name: 'songs',
   initialState,
   reducers: {
-    setSongs(state, { payload }) {
+    setSongs(state, {payload}) {
       SettingsST.getInstance().setSongs(payload);
 
       console.log(payload);
 
       state.songs = payload;
     },
-    setSong2(state, { payload }: PayloadAction<Song[]>) {
+    setSong2(state, {payload}: PayloadAction<Song[]>) {
       state.songs2 = payload;
     },
   },
 });
 
-export const { setSongs, setSong2 } = songsSlice.actions;
+export const {setSongs, setSong2} = songsSlice.actions;
 
 export default songsSlice.reducer;

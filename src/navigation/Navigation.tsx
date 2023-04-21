@@ -1,7 +1,7 @@
-import { TabActions } from '@react-navigation/native';
-import { SCREENS } from '../lib/routes';
-import { TrackCardProps } from '../types/TrackCard.types';
-import { justPlay } from '../services/playerActions';
+import {TabActions} from '@react-navigation/native';
+import {SCREENS} from '../lib/routes';
+import {TrackCardProps} from '../types/trackCard.types';
+import {justPlay} from '../services/playerActions';
 
 type NavigationProps = {
   navigate: (screen: any, props?: any) => void;

@@ -1,5 +1,5 @@
-import { Album, Artist, Genre } from '../lib/types';
 import { Song } from '../store/songs';
+import { Album, Artist, Genre } from '../types/types';
 
 export const filterAlbums = (albums: Album[], searchValue: string): Album[] => {
   return albums.filter(({ name }) =>
@@ -19,10 +19,10 @@ export const filterArtists = (artists: Artist[], searchValue: string): Artist[] 
   );
 };
 
-export const filterSongs = (songs: Song[], searchValue: string): Song[] => {
+export const filterSongs = (songs: any[], searchValue: string): Song[] => {
   return songs
     .filter((song: any) => !song.isExcluded)
-    .filter(({ title }: { title?: string }) => {
+    .filter(({ title }: { title?: any }) => {
       if (title) {
         return title.toLowerCase().includes(searchValue.toLowerCase());
       }

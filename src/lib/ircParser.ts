@@ -1,4 +1,4 @@
-import { Lyrics } from '../lib/types';
+import { Lyrics } from '../types/types';
 
 const lrcParser = (lrcData: string) => {
   const lines = lrcData.split('\n');

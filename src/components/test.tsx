@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 import {
   FlatList,
   ScrollView,
@@ -7,8 +7,9 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {useDispatch, useSelector} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import TrackPlayer from 'react-native-track-player';
+import { Button } from 'react-native-paper';
 
 interface Song {
   filename: string;
@@ -26,7 +27,7 @@ interface SongItemProps {
 
 class SongItem extends React.PureComponent<SongItemProps> {
   render() {
-    const {filename, album, artist, genre, id} = this.props.item;
+    const { filename, album, artist, genre, id } = this.props.item;
     return (
       <TouchableOpacity>
         <View style={styles.view}>
@@ -44,19 +45,22 @@ class SongItem extends React.PureComponent<SongItemProps> {
 
 const Test = () => {
   const [sound, setSound] = React.useState<any>(null);
-  const songs = useSelector(({songs: {songs}}: any) =>
-    songs.filter(({isExcluded}: any) => !isExcluded),
+  const songs = useSelector(({ songs: { songs } }: any) =>
+    songs.filter(({ isExcluded }: any) => !isExcluded),
   );
 
   return (
     <View style={styles.container}>
       <FlatList
         data={songs}
-        renderItem={({item}: {item: Song}) => <SongItem item={item} />}
-        keyExtractor={({id}: {id: string}) => id}
+        renderItem={({ item }: { item: Song }) => <SongItem item={item} />}
+        keyExtractor={({ id }: { id: string }) => id}
         removeClippedSubviews={true}
         onEndReachedThreshold={1}
       />
+      <View>
+        <Button icon="camera">Press me</Button>
+      </View>
     </View>
   );
 };

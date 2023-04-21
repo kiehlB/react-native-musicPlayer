@@ -1,6 +1,5 @@
 import { BottomTabBar, BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import React, { useEffect, useState } from 'react';
-import { View } from 'react-native';
 import { State, usePlaybackState } from 'react-native-track-player';
 import { SCREENS } from '../lib/routes';
 import { MiniPlayer } from '../components/player/miniPlayer';
@@ -13,7 +12,9 @@ export const CustomTabBar = (props: BottomTabBarProps): JSX.Element => {
   useEffect(() => {
     if (
       playbackState.state &&
-      [State.Playing, State.Paused, State.Buffering].includes(playbackState.state)
+      [State.Playing, State.Ready, State.Paused, State.Buffering].includes(
+        playbackState.state,
+      )
     ) {
       setShowMusicBar(true);
       return;

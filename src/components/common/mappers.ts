@@ -1,5 +1,5 @@
-import { Track, TrackType } from 'react-native-track-player';
-import { TrackCardProps } from '../../types/TrackCard.types';
+import {Track, TrackType} from 'react-native-track-player';
+import {TrackCardProps} from '../../types/trackCard.types';
 
 export const mapToTrack = ({
   song,

@@ -1,11 +1,11 @@
-import { useNavigation } from '@react-navigation/native';
-import React, { useState } from 'react';
-import { StyleSheet, TouchableWithoutFeedback, View } from 'react-native';
-import { useTrackPlayerEvents, Event, State } from 'react-native-track-player';
+import {useNavigation} from '@react-navigation/native';
+import React, {useState} from 'react';
+import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native';
+import {useTrackPlayerEvents, Event, State} from 'react-native-track-player';
 
 // import LinearGradient from 'react-native-linear-gradient';
 
-import { navigateToPlayer } from '../../navigation/Navigation';
+import {navigateToPlayer} from '../../navigation/navigation';
 
 const events = [Event.PlaybackState, Event.PlaybackError];
 

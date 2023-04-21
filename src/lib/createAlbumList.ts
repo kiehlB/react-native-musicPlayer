@@ -1,5 +1,5 @@
-import { Album } from '../lib/types';
 import { Song } from '../store/songs';
+import { Album } from '../types/types';
 
 const createAlbumList = (
   albumNameList: (string | undefined)[],
