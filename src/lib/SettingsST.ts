@@ -30,9 +30,9 @@ export default class SettingsST {
       case PlayMode.REPEAT:
       case PlayMode.REPEAT_SONG:
         this.playOrder = this.playOrder
-          .filter(song => song.title != null)
+          .filter(song => song.filename != null)
           .sort((s1, s2) =>
-            s1.title!.toLowerCase().localeCompare(s2.title!.toLowerCase()),
+            s1.filename!.toLowerCase().localeCompare(s2.filename!.toLowerCase()),
           );
         break;
       case PlayMode.SHUFFLE:

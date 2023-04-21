@@ -1,20 +1,22 @@
-import { Link, Stack } from 'expo-router';
-import { StyleSheet } from 'react-native';
-
-import { Text, View } from './Themed';
+import React from 'react';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 export default function NotFoundScreen() {
-  return (
-    <>
-      <Stack.Screen options={{ title: 'Oops!' }} />
-      <View style={styles.container}>
-        <Text style={styles.title}>This screen doesn't exist.</Text>
+  const navigation = useNavigation();
 
-        <Link href="/" style={styles.link}>
-          <Text style={styles.linkText}>Go to home screen!</Text>
-        </Link>
-      </View>
-    </>
+  return (
+    <View style={styles.container}>
+      <Text style={styles.title}>잘못된 경로입니다.</Text>
+
+      <TouchableOpacity
+        onPress={() => {
+          navigation.goBack();
+        }}
+        style={styles.link}>
+        <Text style={styles.linkText}>뒤로가기</Text>
+      </TouchableOpacity>
+    </View>
   );
 }
 

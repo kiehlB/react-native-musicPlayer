@@ -4,7 +4,7 @@ import { Lyrics } from '../lib/types';
 
 export interface Song {
   id?: string;
-  title?: string | undefined;
+  filename?: string | undefined;
   album?: string;
   artist?: string;
   genre?: string;
@@ -32,10 +32,9 @@ const songsSlice = createSlice({
   initialState,
   reducers: {
     setSongs(state, { payload }) {
-      payload.sort((s1: { title: string }, s2: { title: string }) =>
-        s1.title.toLowerCase().localeCompare(s2.title.toLowerCase()),
-      );
       SettingsST.getInstance().setSongs(payload);
+
+      console.log(payload);
 
       state.songs = payload;
     },

@@ -1,57 +1,62 @@
-import React, { useEffect } from 'react';
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
-import * as MediaLibrary from 'expo-media-library';
-import { setSong2 } from '../store/songs';
-import { RootState } from '../store/rootReducer';
+import React, {useEffect} from 'react';
+import {
+  FlatList,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import {useDispatch, useSelector} from 'react-redux';
+import TrackPlayer from 'react-native-track-player';
+
+interface Song {
+  filename: string;
+  album: string | undefined;
+  artist: string | undefined;
+  genre: string | undefined;
+  id: string;
+  isExcluded: boolean;
+  url: string;
+}
+
+interface SongItemProps {
+  item: Song;
+}
+
+class SongItem extends React.PureComponent<SongItemProps> {
+  render() {
+    const {filename, album, artist, genre, id} = this.props.item;
+    return (
+      <TouchableOpacity>
+        <View style={styles.view}>
+          <Text numberOfLines={1}>
+            {filename} - {genre || 'unknown'}
+          </Text>
+          <Text numberOfLines={1}>
+            {album || 'unknown'} - {artist || 'unknown'}
+          </Text>
+        </View>
+      </TouchableOpacity>
+    );
+  }
+}
 
 const Test = () => {
-  // useEffect(() => {
-  //   (async () => {
-  //     const { status } = await MediaLibrary.requestPermissionsAsync();
-  //     if (status !== 'granted') {
-  //       // 권한이 없을 경우의 처리
-  //       return;
-  //     }
-
-  //     const media = await MediaLibrary.getAssetsAsync({
-  //       mediaType: MediaLibrary.MediaType.audio,
-  //       sortBy: [MediaLibrary.SortBy.default],
-  //       first: 500,
-  //     });
-
-  //     const musicList = media.assets.map(music => ({
-  //       id: music.id,
-
-  //       duration: music.duration,
-  //       uri: music.uri,
-  //     }));
-
-  //     console.log(musicList.map(e => e.id));
-  //     dispatch(setSong2(musicList));
-  //   })();
-  // }, []);
-
-  const songs = useSelector(({ songs: { songs } }: any) =>
-    songs.filter(({ isExcluded }: any) => !isExcluded),
+  const [sound, setSound] = React.useState<any>(null);
+  const songs = useSelector(({songs: {songs}}: any) =>
+    songs.filter(({isExcluded}: any) => !isExcluded),
   );
-
-  // console.log(songs2);
 
   return (
     <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
-      <StatusBar style="auto" />
-      <Text style={styles.set}>
-        {songs.map((e: { id: any }) => {
-          return (
-            <View style={styles.idContainer} key={e.id}>
-              <Text style={styles.idText}>{e.id}</Text>
-            </View>
-          );
-        })}
-      </Text>
+      <FlatList
+        data={songs}
+        renderItem={({item}: {item: Song}) => <SongItem item={item} />}
+        keyExtractor={({id}: {id: string}) => id}
+        removeClippedSubviews={true}
+        onEndReachedThreshold={1}
+      />
     </View>
   );
 };
@@ -60,10 +65,7 @@ export default Test;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    height: 1200,
   },
   set: {
     marginLeft: 20,
@@ -74,7 +76,15 @@ const styles = StyleSheet.create({
   idContainer: {
     flexDirection: 'row',
   },
+  flatList: {},
   idText: {
     marginRight: 10,
+  },
+  scrollView: {
+    backgroundColor: 'pink',
+    marginHorizontal: 20,
+  },
+  view: {
+    marginBottom: 60,
   },
 });
