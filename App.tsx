@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { StatusBar, View, useColorScheme } from 'react-native';
+import { StatusBar, useColorScheme } from 'react-native';
 import TrackPlayer, {
   AppKilledPlaybackBehavior,
   Capability,
 } from 'react-native-track-player';
-import { Colors } from 'react-native/Libraries/NewAppScreen';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { Provider as PaperProvider } from 'react-native-paper';
+import { Provider } from 'react-redux';
 
 import { BottomBarScreenNavigator } from './src/navigation/navBar';
-import { Provider } from 'react-redux';
 import store from './src/store/store';
-import { Button, Provider as PaperProvider } from 'react-native-paper';
 import ErrorBoundary from './src/components/common/errorBoundary';
+import { theme } from './src/lib/colors';
 
 const playerCapabilities = [
   Capability.Play,
@@ -26,7 +26,7 @@ function App(): JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
 
   const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+    backgroundColor: isDarkMode ? theme.dark.background : theme.light.background,
   };
 
   useEffect(() => {

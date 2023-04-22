@@ -9,7 +9,6 @@ import {
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import TrackPlayer from 'react-native-track-player';
-import { Button } from 'react-native-paper';
 
 interface Song {
   filename: string;
@@ -43,7 +42,7 @@ class SongItem extends React.PureComponent<SongItemProps> {
   }
 }
 
-const Test = () => {
+const PlayList = () => {
   const [sound, setSound] = React.useState<any>(null);
   const songs = useSelector(({ songs: { songs } }: any) =>
     songs.filter(({ isExcluded }: any) => !isExcluded),
@@ -58,21 +57,17 @@ const Test = () => {
         removeClippedSubviews={true}
         onEndReachedThreshold={1}
       />
-      <View>
-        <Button icon="camera">Press me</Button>
-      </View>
+
+      <Text>hello</Text>
     </View>
   );
 };
 
-export default Test;
+export default PlayList;
 
 const styles = StyleSheet.create({
-  container: {
-    height: 1200,
-  },
+  container: {},
   set: {
-    marginLeft: 20,
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'flex-start',
@@ -88,7 +83,5 @@ const styles = StyleSheet.create({
     backgroundColor: 'pink',
     marginHorizontal: 20,
   },
-  view: {
-    marginBottom: 60,
-  },
+  view: {},
 });
