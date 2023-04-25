@@ -4,6 +4,10 @@ import { SCREENS } from '../lib/routes';
 import HomeScreen from '../screens/homeScreen';
 import MusicFolderScreen from '../screens/musicFolderScreen';
 import SettingsScreen from '../screens/settingsScreen';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
+import AppTabBar from './appTabBar';
+
+const Tab = createMaterialTopTabNavigator();
 
 const NavStack = createNativeStackNavigator();
 
@@ -14,9 +18,10 @@ export const HomeScreenNavigator = () => {
       screenOptions={{ headerShown: true, animation: 'fade_from_bottom' }}>
       <NavStack.Screen
         name={SCREENS.HOME}
-        component={HomeScreen}
+        component={AppTabBar}
         options={{ headerShown: false }}
       />
+
       <NavStack.Group>
         <NavStack.Screen name={SCREENS.ARTIST_SCREEN} component={HomeScreen} />
         <NavStack.Screen name={SCREENS.ALBUM_SCREEN} component={MusicFolderScreen} />

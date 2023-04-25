@@ -7,6 +7,8 @@ import { HomeScreenNavigator, MusicFolderScreenNavigator } from './navStack';
 import { SCREENS } from '../lib/routes';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import SettingsScreen from '../screens/settingsScreen';
+import { Text, View } from '../components/common/theme';
+import Menu from '../components/common/menu';
 
 type Props = { focused: boolean; color: string; size: number };
 
@@ -29,25 +31,49 @@ export const BottomBarScreenNavigator = () => {
   return (
     <NavigationContainer>
       <NavBar.Navigator
-        initialRouteName={SCREENS.ROOT}
+        initialRouteName={SCREENS.Music}
         screenOptions={{
-          headerShown: false,
-          tabBarShowLabel: false,
+          headerStyle: {
+            borderWidth: 0,
+            elevation: 0,
+            shadowOpacity: 0,
+          },
+          headerShown: true,
+          headerRight: () => (
+            <View style={styles.headerIcon}>
+              <MaterialIcons
+                name="search"
+                size={24}
+                color="black"
+                style={[styles.search]}
+              />
+
+              <Menu>
+                <MaterialIcons
+                  name="sort"
+                  size={24}
+                  color="black"
+                  style={[styles.search]}
+                />
+              </Menu>
+            </View>
+          ),
+          tabBarShowLabel: true,
           tabBarHideOnKeyboard: true,
         }}
         tabBar={props => <CustomTabBar {...props} />}>
         <NavBar.Screen
-          name={SCREENS.ROOT}
+          name={SCREENS.Music}
           component={HomeScreenNavigator}
           options={{ tabBarIcon: icon('music-note') }}
         />
         <NavBar.Screen
-          name={SCREENS.SEARCH}
+          name={SCREENS.Folder}
           component={MusicFolderScreenNavigator}
           options={{ tabBarIcon: icon('library-music') }}
         />
         <NavBar.Screen
-          name={SCREENS.PLAYER}
+          name={SCREENS.Settings}
           component={SettingsScreen}
           options={{ tabBarIcon: icon('settings') }}
         />
@@ -60,5 +86,12 @@ const styles = StyleSheet.create({
   icon: {
     height: 25,
     aspectRatio: 1,
+  },
+  search: {
+    paddingRight: 16,
+  },
+  headerIcon: {
+    flexDirection: 'row',
+    marginRight: 24,
   },
 });

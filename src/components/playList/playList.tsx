@@ -8,7 +8,8 @@ import {
   View,
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
-import TrackPlayer from 'react-native-track-player';
+import TrackPlayer, { State } from 'react-native-track-player';
+import PaPerMenu from '../common/menu';
 
 interface Song {
   filename: string;
@@ -17,7 +18,7 @@ interface Song {
   genre: string | undefined;
   id: string;
   isExcluded: boolean;
-  url: string;
+  uri: string;
 }
 
 interface SongItemProps {
@@ -25,10 +26,26 @@ interface SongItemProps {
 }
 
 class SongItem extends React.PureComponent<SongItemProps> {
+  handlePress = async () => {
+    const { id, uri } = this.props.item;
+
+    await TrackPlayer.reset();
+    await TrackPlayer.add({
+      id,
+      url: uri,
+      title: this.props.item.filename,
+      artist: this.props.item.artist || 'unknown',
+      artwork: 'http://example.com/songs/artwork.jpg',
+    });
+
+    // Play the song
+    await TrackPlayer.play();
+  };
+
   render() {
     const { filename, album, artist, genre, id } = this.props.item;
     return (
-      <TouchableOpacity>
+      <TouchableOpacity onPress={this.handlePress}>
         <View style={styles.view}>
           <Text numberOfLines={1}>
             {filename} - {genre || 'unknown'}
@@ -43,7 +60,6 @@ class SongItem extends React.PureComponent<SongItemProps> {
 }
 
 const PlayList = () => {
-  const [sound, setSound] = React.useState<any>(null);
   const songs = useSelector(({ songs: { songs } }: any) =>
     songs.filter(({ isExcluded }: any) => !isExcluded),
   );
@@ -57,8 +73,6 @@ const PlayList = () => {
         removeClippedSubviews={true}
         onEndReachedThreshold={1}
       />
-
-      <Text>hello</Text>
     </View>
   );
 };
@@ -83,5 +97,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'pink',
     marginHorizontal: 20,
   },
-  view: {},
+  view: {
+    marginBottom: 40,
+  },
 });

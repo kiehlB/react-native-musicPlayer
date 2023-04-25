@@ -45,15 +45,13 @@ export const InitializeApp =
     const audios = (
       await MediaLibrary.getAssetsAsync({
         mediaType: 'audio',
-        first: 1,
+        first: 99999999,
       })
     ).assets;
 
     audios.sort((s1: any, s2: any) => {
       return s1?.filename.toLowerCase().localeCompare(s2?.filename.toLowerCase());
     });
-
-    console.log(audios[0]?.id);
 
     dispatch(setSongs(audios));
 

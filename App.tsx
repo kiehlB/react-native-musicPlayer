@@ -12,6 +12,7 @@ import { BottomBarScreenNavigator } from './src/navigation/navBar';
 import store from './src/store/store';
 import ErrorBoundary from './src/components/common/errorBoundary';
 import { theme } from './src/lib/colors';
+import Menu from './src/components/common/menu';
 
 const playerCapabilities = [
   Capability.Play,

@@ -1,5 +1,5 @@
-import {createSlice, PayloadAction, createSelector} from '@reduxjs/toolkit';
-import {Lyrics} from '../types/types';
+import { createSlice, PayloadAction, createSelector } from '@reduxjs/toolkit';
+import { Lyrics } from '../types/types';
 import SettingsST from '../lib/settingsST';
 
 export interface Song {
@@ -15,35 +15,29 @@ export interface Song {
   videoUri?: string;
   duration?: number;
   lyrics?: Lyrics;
+  url: string;
 }
 
 export interface SongsState {
   songs: Song[];
-  songs2: any[];
 }
 
 const initialState: SongsState = {
   songs: [],
-  songs2: [],
 };
 
 const songsSlice = createSlice({
   name: 'songs',
   initialState,
   reducers: {
-    setSongs(state, {payload}) {
+    setSongs(state, { payload }) {
       SettingsST.getInstance().setSongs(payload);
 
-      console.log(payload);
-
       state.songs = payload;
-    },
-    setSong2(state, {payload}: PayloadAction<Song[]>) {
-      state.songs2 = payload;
     },
   },
 });
 
-export const {setSongs, setSong2} = songsSlice.actions;
+export const { setSongs } = songsSlice.actions;
 
 export default songsSlice.reducer;
