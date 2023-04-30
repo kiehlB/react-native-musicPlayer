@@ -1,20 +1,21 @@
 import React, { useEffect } from 'react';
 import { StyleSheet } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { InitializeApp } from '../store/toolkit';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Text, View } from '../components/common/theme';
 import PlayList from '../components/playList/playList';
-import { RootState } from '../store/rootReducer';
 
-export type HomeScreenProps = {};
+export type SearchScreenProps = {};
 
-export default function HomeScreen(props: HomeScreenProps) {
+export default function SearchScreen(props: SearchScreenProps) {
+  const dispatch = useDispatch();
+
   return (
     <SafeAreaView>
       <View style={styles.container}>
         <View style={styles.musicContainer}>
-          <PlayList />
+          <Text>hello</Text>
         </View>
       </View>
     </SafeAreaView>

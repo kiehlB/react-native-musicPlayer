@@ -1,5 +1,7 @@
 import React, { useEffect } from 'react';
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import TrackPlayer from 'react-native-track-player';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 interface Song {
   filename: string;
@@ -8,22 +10,24 @@ interface Song {
   genre: string | undefined;
   id: string;
   isExcluded: boolean;
-  url: string;
+  uri: string;
   duration: string;
 }
 
-const PlayListItem = React.memo(
-  ({ item, onPress }: { item: Song; onPress: () => void }) => {
-    const { filename, album, artist, genre, duration } = item;
+class PlayListItem extends React.PureComponent<any> {
+  render() {
+    const { filename, album, artist, genre, id, duration } = this.props.item;
+
     return (
-      <TouchableOpacity style={styles.container} onPress={onPress}>
-        <Text style={styles.thumbnail}>1</Text>
+      <TouchableOpacity style={styles.container}>
+        <View style={styles.thumbnail}>
+          <MaterialIcons name="audiotrack" size={24} color="black" />
+        </View>
         <View style={styles.textContainer}>
           <Text style={styles.title} numberOfLines={1} ellipsizeMode="tail">
             {filename}
           </Text>
           <Text style={styles.artist}>
-            {' '}
             {album || 'unknown'} - {artist || 'unknown'}
           </Text>
         </View>
@@ -33,8 +37,8 @@ const PlayListItem = React.memo(
         </View>
       </TouchableOpacity>
     );
-  },
-);
+  }
+}
 
 export default PlayListItem;
 
@@ -48,10 +52,12 @@ const styles = StyleSheet.create({
     height: 50,
     borderWidth: 1,
     borderColor: 'red',
-    alignSelf: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   textContainer: {
     flex: 1,
+    paddingLeft: 8,
   },
   title: {
     fontSize: 16,
@@ -61,6 +67,7 @@ const styles = StyleSheet.create({
     paddingRight: 4,
     paddingLeft: 4,
   },
+
   artist: {
     fontSize: 14,
     color: '#888',

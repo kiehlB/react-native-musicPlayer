@@ -9,7 +9,7 @@ import Animated, {
 const Menu = ({ children }: any) => {
   const [isOpen, setIsOpen] = useState(false);
   const opacity = useSharedValue(0);
-  const translateY = useSharedValue(-100);
+  const translateY = useSharedValue(180);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
@@ -25,7 +25,7 @@ const Menu = ({ children }: any) => {
   });
 
   return (
-    <View style={styles.container}>
+    <TouchableOpacity style={styles.container}>
       <View style={styles.menuContainer}>
         <Animated.View style={[styles.menu, animatedStyle]}>
           <TouchableOpacity style={styles.menuItem}>
@@ -42,7 +42,7 @@ const Menu = ({ children }: any) => {
       <TouchableOpacity onPress={toggleMenu}>
         <Text>{children}</Text>
       </TouchableOpacity>
-    </View>
+    </TouchableOpacity>
   );
 };
 

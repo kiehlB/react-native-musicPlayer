@@ -55,8 +55,6 @@ export const InitializeApp =
 
     dispatch(setSongs(audios));
 
-    // dispatch(LoadSong(audios[0]?.id));
-
     dispatch(setLoadingState('resovle'));
   };
 
@@ -74,42 +72,42 @@ export const LoadSong =
 
     const playbackInstance = new Audio.Sound();
 
-    // playbackInstance.setOnPlaybackStatusUpdate((playbackStatus: AVPlaybackStatus) => {
-    //   if (!playbackStatus.isLoaded) {
-    //     if (playbackStatus.error) {
-    //       console.log(
-    //         `Encountered a fatal error during playback: ${playbackStatus.error}`,
-    //       );
-    //     }
-    //   } else {
-    //     dispatch(setBuffering(playbackStatus.isBuffering));
-    //     dispatch(setCurrentPosition(playbackStatus.positionMillis));
+    playbackInstance.setOnPlaybackStatusUpdate((playbackStatus: AVPlaybackStatus) => {
+      if (!playbackStatus.isLoaded) {
+        if (playbackStatus.error) {
+          console.log(
+            `Encountered a fatal error during playback: ${playbackStatus.error}`,
+          );
+        }
+      } else {
+        dispatch(setBuffering(playbackStatus.isBuffering));
+        dispatch(setCurrentPosition(playbackStatus.positionMillis));
 
-    //     if (playbackStatus.didJustFinish && !playbackStatus.isLooping)
-    //       dispatch(NextTrack());
-    //     if (
-    //       playbackStatus.shouldPlay &&
-    //       !playbackStatus.isPlaying &&
-    //       playbackStatus.isLoaded &&
-    //       !playbackStatus.isBuffering &&
-    //       !playbackStatus.didJustFinish
-    //     )
-    //       playbackInstance.playAsync();
-    //   }
-    // });
-    // await playbackInstance.loadAsync(
-    //   {
-    //     uri: audios.find((song: { id: string }) => song.id === id)!.uri,
-    //   },
-    //   {
-    //     shouldPlay: isPlaying || shouldPlay,
-    //     volume,
-    //   },
-    // );
+        if (playbackStatus.didJustFinish && !playbackStatus.isLooping)
+          dispatch(NextTrack());
+        if (
+          playbackStatus.shouldPlay &&
+          !playbackStatus.isPlaying &&
+          playbackStatus.isLoaded &&
+          !playbackStatus.isBuffering &&
+          !playbackStatus.didJustFinish
+        )
+          playbackInstance.playAsync();
+      }
+    });
+    await playbackInstance.loadAsync(
+      {
+        uri: audios.find((song: { id: string }) => song.id === id)!.uri,
+      },
+      {
+        shouldPlay: isPlaying || shouldPlay,
+        volume,
+      },
+    );
 
-    // dispatch(setPlaying(isPlaying || shouldPlay));
+    dispatch(setPlaying(isPlaying || shouldPlay));
 
-    // dispatch(setPlaybackInstance(playbackInstance));
+    dispatch(setPlaybackInstance(playbackInstance));
   };
 
 export const NextTrack = (): AppThunk => async (dispatch, getState) => {

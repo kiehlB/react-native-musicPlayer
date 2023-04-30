@@ -1,6 +1,5 @@
 import React, { useEffect } from 'react';
 import { StyleSheet } from 'react-native';
-import { useDispatch } from 'react-redux';
 import AppBar from '../appBar';
 import { View } from './theme';
 

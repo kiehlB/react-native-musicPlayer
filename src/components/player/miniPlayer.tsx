@@ -1,87 +1,150 @@
-import {useNavigation} from '@react-navigation/native';
-import React, {useState} from 'react';
-import {StyleSheet, TouchableWithoutFeedback, View} from 'react-native';
-import {useTrackPlayerEvents, Event, State} from 'react-native-track-player';
+import React, { useEffect } from 'react';
+import { StyleSheet } from 'react-native';
+import Animated, {
+  withSpring,
+  interpolate,
+  Extrapolate,
+  useSharedValue,
+  useDerivedValue,
+  useAnimatedStyle,
+  useAnimatedGestureHandler,
+} from 'react-native-reanimated';
+import { MiniSlider } from './position';
+import { WIDTH, HEIGHT, BOTTOM_INSET, SNAP_TOP, SNAP_BOTTOM } from '../../lib/dimensions';
 
-// import LinearGradient from 'react-native-linear-gradient';
+import { Actions } from './actions';
 
-import {navigateToPlayer} from '../../navigation/navigation';
+import TrackPlayer, { useProgress } from 'react-native-track-player';
+import { Context } from '../../context/animationContext';
+import { PanGestureHandler, TapGestureHandler } from 'react-native-gesture-handler';
+import { Section } from '../playerSection';
+import { NextPrev } from './arrow';
 
-const events = [Event.PlaybackState, Event.PlaybackError];
+export const Player = () => {
+  const { duration } = useProgress();
 
-const TrackInfo = () => {
-  const [playerState, setPlayerState] = useState(null) as any;
+  useEffect(() => {
+    const getTrack = async () => {
+      const trackIndex = (await TrackPlayer.getCurrentTrack()) as any;
+      const trackObject = (await TrackPlayer.getTrack(trackIndex)) as any;
+      console.log(`Title: ${trackObject?.title}`);
+      console.log(`duration' ${trackObject?.duration}`);
+    };
 
-  useTrackPlayerEvents(events, event => {
-    if (event.type === Event.PlaybackError) {
-      console.warn('An error occured while playing the current track.');
-    }
-    if (event.type === Event.PlaybackState) {
-      setPlayerState(event.state);
-    }
+    getTrack();
+  }, [duration]);
+
+  const translateY = useSharedValue(SNAP_BOTTOM - 40);
+
+  const tapGestureHandler = useAnimatedGestureHandler({
+    onStart: (event, ctx: any) => {
+      ctx.startY = translateY.value;
+    },
+    onEnd: (event: any, ctx) => {
+      const { absoluteY } = event;
+      const min = SNAP_BOTTOM - 40;
+      const max = SNAP_TOP;
+      const endY = ctx.startY + event.absoluteY;
+
+      if (endY > min) {
+        translateY.value = withSpring(max, { overshootClamping: true });
+      } else if (endY < max) {
+        translateY.value = withSpring(min, { overshootClamping: true });
+      } else {
+        const isMovingUp = endY - ctx.startY < 0;
+        const toValue = isMovingUp ? max : min;
+        const velocity = Math.abs(absoluteY.velocity);
+
+        translateY.value = withSpring(toValue, {
+          velocity,
+          stiffness: 80,
+          overshootClamping: true,
+        });
+      }
+    },
   });
-  const nav = useNavigation();
+
+  const gestureHandler = useAnimatedGestureHandler({
+    onStart: (_, ctx: any) => {
+      ctx.startY = translateY.value;
+    },
+    onActive: (event, ctx: any) => {
+      const min = SNAP_BOTTOM - 40;
+      const max = SNAP_TOP;
+
+      let value = ctx.startY + event.translationY;
+
+      if (value > min) {
+        value = min;
+      } else if (value < max) {
+        value = max;
+      }
+
+      translateY.value = value;
+    },
+    onEnd: event => {
+      const velocity = event.velocityY;
+      const toValue = velocity > 0 ? SNAP_BOTTOM - 40 : 0;
+
+      translateY.value = withSpring(toValue, {
+        velocity,
+        stiffness: 40,
+        overshootClamping: true,
+      });
+    },
+  });
+
+  const percent = useDerivedValue(() => {
+    return interpolate(
+      translateY.value,
+      [SNAP_BOTTOM - 40, SNAP_TOP],
+      [0, 100],
+      Extrapolate.CLAMP,
+    );
+  });
+
+  const style = useAnimatedStyle(() => {
+    return {
+      transform: [{ translateX: 0 }, { translateY: translateY.value }],
+    };
+  });
 
   return (
-    <TouchableWithoutFeedback onPress={navigateToPlayer(nav)}>
-      <View style={styles.info}>
-        {/* <View style={styles.image}>
-          <TrackBarImage
-            url={activeTrack?.artwork as string}
-            id={activeTrack?.title}
-          />
-        </View>
-        <TrackBarInfo
-          artist={activeTrack?.artist}
-          name={activeTrack?.title}
-        /> */}
-      </View>
-    </TouchableWithoutFeedback>
-  );
-};
-
-export const MiniPlayer = () => {
-  return (
-    <View style={styles.container}>
-      {/* <LinearGradient
-        colors={[colors.darkContrast, colors.greyTransparent, colors.dark]}
-        style={styles.gradient}
-      /> */}
-      <View style={styles.bar}>
-        <TrackInfo />
-      </View>
-    </View>
+    <Context.Provider value={{ percent }}>
+      <Animated.View style={[styles.container, style]}>
+        {/* @ts-ignore */}
+        <TapGestureHandler onGestureEvent={tapGestureHandler}>
+          <Animated.View
+            style={{ width: '100%', height: '100%', backgroundColor: '#fff' }}>
+            <PanGestureHandler onGestureEvent={gestureHandler}>
+              <Animated.View style={styles.overlay}>
+                <MiniSlider />
+                <Section />
+                <Actions />
+                <NextPrev />
+              </Animated.View>
+            </PanGestureHandler>
+          </Animated.View>
+        </TapGestureHandler>
+      </Animated.View>
+    </Context.Provider>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    borderTopLeftRadius: 15,
-    borderTopRightRadius: 15,
-    overflow: 'hidden',
-  },
-  bar: {
-    flexDirection: 'row',
-    maxHeight: 60,
+    top: 0,
+    left: 0,
+    width: WIDTH,
+    height: HEIGHT,
+    position: 'absolute',
+    paddingBottom: BOTTOM_INSET,
     alignItems: 'center',
     justifyContent: 'space-between',
-    padding: 10,
-    paddingLeft: 10,
-    paddingRight: 10,
-    position: 'relative',
-    overflow: 'hidden',
+    backgroundColor: 'rgb(27, 35, 35)',
   },
-  info: {
-    flexDirection: 'row',
-    flex: 4 / 5,
-  },
-  gradient: {
-    position: 'absolute',
-    width: '100%',
-    height: '100%',
-  },
-  image: {
-    position: 'relative',
-    marginRight: 10,
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
   },
 });

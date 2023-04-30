@@ -2,7 +2,7 @@ import { BottomTabBar, BottomTabBarProps } from '@react-navigation/bottom-tabs';
 import React, { useEffect, useState } from 'react';
 import { State, usePlaybackState } from 'react-native-track-player';
 import { SCREENS } from '../lib/routes';
-import { MiniPlayer } from '../components/player/miniPlayer';
+import { Player } from '../components/player/miniPlayer';
 
 export const CustomTabBar = (props: BottomTabBarProps): JSX.Element => {
   const [showMusicBar, setShowMusicBar] = useState(false);
@@ -24,15 +24,20 @@ export const CustomTabBar = (props: BottomTabBarProps): JSX.Element => {
 
   if (
     showMusicBar &&
-    [SCREENS.SEARCH, SCREENS.ROOT].includes(currentTabScreen as SCREENS)
+    [SCREENS.SEARCH, SCREENS.HOME].includes(currentTabScreen as SCREENS)
   ) {
     return (
       <>
-        <MiniPlayer />
+        <Player />
         <BottomTabBar {...props} />
       </>
     );
   }
 
-  return <BottomTabBar {...props} />;
+  return (
+    <>
+      <Player />
+      <BottomTabBar {...props} />
+    </>
+  );
 };

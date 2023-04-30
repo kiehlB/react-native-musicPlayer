@@ -28,11 +28,11 @@ export const navigateToAlbumDetailPage =
 export const navigateToTrackDetailPage =
   (navigation: NavigationProps) => (track: TrackCardProps) => {
     justPlay(track);
-    navigation.dispatch(TabActions.jumpTo(SCREENS.Settings));
+    navigation.dispatch(TabActions.jumpTo(SCREENS.SETTINGS));
   };
 
 export const navigateToPlayer = (navigation: NavigationProps) => () => {
-  navigation.dispatch(TabActions.jumpTo(SCREENS.Settings));
+  navigation.dispatch(TabActions.jumpTo(SCREENS.SETTINGS));
 };
 
 export const navigateToPlaylistDetailPage =
@@ -42,4 +42,8 @@ export const navigateToPlaylistDetailPage =
 
 export const navigateToHomePage = (navigation: NavigationProps) => () => {
   navigation.navigate(SCREENS.HOME);
+};
+
+export const navigateToSearchPage = (navigation: NavigationProps) => () => {
+  navigation.navigate(SCREENS.FOLDER);
 };
