@@ -70,10 +70,14 @@ export const Duration: React.FC<Props> = ({ time, isTouching }: Props) => {
   return (
     <Fragment>
       <Animated.View style={[styles.position, positionStyle]}>
-        <Text numberOfLines={1}>{timeFormat(position)}</Text>
+        <Text style={{ color: '#FFFFFFDE' }} numberOfLines={1}>
+          {timeFormat(position)}
+        </Text>
       </Animated.View>
       <Animated.View style={[styles.duration, durationStyle]}>
-        <Text numberOfLines={1}>{timeFormat(duration)}</Text>
+        <Text style={{ color: '#FFFFFFDE' }} numberOfLines={1}>
+          {timeFormat(duration)}
+        </Text>
       </Animated.View>
     </Fragment>
   );
@@ -86,7 +90,7 @@ const styles = StyleSheet.create({
     bottom,
     left: 0,
     width: 70,
-    height: 25,
+    height: 140,
     position: 'absolute',
     alignItems: 'center',
     justifyContent: 'center',
@@ -95,7 +99,7 @@ const styles = StyleSheet.create({
     bottom,
     right: 0,
     width: 70,
-    height: 25,
+    height: 140,
     position: 'absolute',
     alignItems: 'center',
     justifyContent: 'center',

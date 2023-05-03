@@ -10,6 +10,8 @@ import Animated, {
 
 import { MINI_CONTROL_WIDTH, MINI_HEIGHT, WIDTH } from '../../lib/dimensions';
 import { useAnimation } from '../../context/animationContext';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import TrackPlayer, { State, usePlaybackState } from 'react-native-track-player';
 
 interface Props {
   offsetY: Animated.SharedValue<number>;
@@ -20,7 +22,9 @@ export const Controls: React.FC<Props> = ({ offsetY }: Props) => {
 
   const offsetX = useSharedValue(0);
 
-  const onPressNext = async () => {};
+  const playerState = usePlaybackState();
+
+  const isPlaying = playerState === State.Playing;
 
   const onPressPrevious = async () => {};
 
@@ -76,12 +80,18 @@ export const Controls: React.FC<Props> = ({ offsetY }: Props) => {
     };
   });
 
+  const onPressNext = async () => {
+    await TrackPlayer.skipToNext();
+  };
+
   return (
     <View onLayout={onLayout} style={styles.frame}>
       <Animated.View style={[styles.container, style]}>
         <View style={styles.buttons}>
           <View style={styles.button}>
-            <TouchableOpacity onPress={onPressPrevious}></TouchableOpacity>
+            <TouchableOpacity onPress={onPressPrevious}>
+              <MaterialCommunityIcons size={36} name="skip-previous" color="#FFFFFFDE" />
+            </TouchableOpacity>
           </View>
           <TouchableOpacity style={{ width: 50, height: 50, marginHorizontal: 5 }}>
             <Animated.View
@@ -91,10 +101,32 @@ export const Controls: React.FC<Props> = ({ offsetY }: Props) => {
                   maxHeight: 50,
                 },
                 buttonStyle,
-              ]}></Animated.View>
+              ]}>
+              {isPlaying ? (
+                <MaterialCommunityIcons
+                  size={36}
+                  name="pause"
+                  color="#FFFFFFDE"
+                  onPress={() => {
+                    TrackPlayer.pause();
+                  }}
+                />
+              ) : (
+                <MaterialCommunityIcons
+                  size={36}
+                  name="play"
+                  color="#FFFFFFDE"
+                  onPress={() => {
+                    TrackPlayer.play();
+                  }}
+                />
+              )}
+            </Animated.View>
           </TouchableOpacity>
           <View style={styles.button}>
-            <TouchableOpacity onPress={onPressNext}></TouchableOpacity>
+            <TouchableOpacity onPress={onPressNext}>
+              <MaterialCommunityIcons size={36} name="skip-next" color="#FFFFFFDE" />
+            </TouchableOpacity>
           </View>
         </View>
       </Animated.View>

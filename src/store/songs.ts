@@ -1,6 +1,5 @@
-import { createSlice, PayloadAction, createSelector } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import { Lyrics } from '../types/types';
-import SettingsST from '../lib/settingsST';
 
 export interface Song {
   id?: string;
@@ -31,8 +30,6 @@ const songsSlice = createSlice({
   initialState,
   reducers: {
     setSongs(state, { payload }) {
-      SettingsST.getInstance().setSongs(payload);
-
       state.songs = payload;
     },
   },

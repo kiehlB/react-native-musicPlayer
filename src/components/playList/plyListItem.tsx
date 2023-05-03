@@ -2,24 +2,29 @@ import React, { useEffect } from 'react';
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import TrackPlayer from 'react-native-track-player';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import { Song } from './playList';
 
-interface Song {
-  filename: string;
-  album: string | undefined;
-  artist: string | undefined;
-  genre: string | undefined;
-  id: string;
-  isExcluded: boolean;
-  uri: string;
-  duration: string;
+interface PlayListItemProps {
+  item: Song;
+  allSongs: Song[];
 }
 
-class PlayListItem extends React.PureComponent<any> {
+class PlayListItem extends React.PureComponent<PlayListItemProps> {
+  handlePress = async () => {
+    const { id, uri } = this.props.item as any;
+    const { allSongs } = this.props as any;
+    const songIndex = allSongs.findIndex((song: Song) => song.id === id);
+    await TrackPlayer.skip(songIndex);
+    await TrackPlayer.play();
+  };
+
   render() {
-    const { filename, album, artist, genre, id, duration } = this.props.item;
+    const { filename, album, artist, genre, id } = this.props.item;
 
     return (
-      <TouchableOpacity style={styles.container}>
+      <TouchableOpacity style={styles.itemContainer} onPress={this.handlePress}>
         <View style={styles.thumbnail}>
           <MaterialIcons name="audiotrack" size={24} color="black" />
         </View>
@@ -32,8 +37,12 @@ class PlayListItem extends React.PureComponent<any> {
           </Text>
         </View>
         <View style={styles.rightContainer}>
-          <Text style={styles.duration}>{duration}</Text>
-          <Text style={styles.iconContainer}>1</Text>
+          <View style={styles.iconContainer}>
+            <View style={{ marginRight: 12, marginLeft: 12 }}>
+              <AntDesign name="hearto" size={24} color="black" />
+            </View>
+            <MaterialCommunityIcons name="dots-vertical" size={24} color="black" />
+          </View>
         </View>
       </TouchableOpacity>
     );
@@ -44,7 +53,41 @@ export default PlayListItem;
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+  },
+  icon: {
+    height: 25,
+    aspectRatio: 1,
+  },
+  search: {},
+  headerIcon: {
     flexDirection: 'row',
+    marginRight: 0,
+  },
+  set: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+  },
+  idContainer: {
+    flexDirection: 'row',
+  },
+  flatList: {},
+  idText: {
+    marginRight: 10,
+  },
+  scrollView: {
+    backgroundColor: 'pink',
+    marginHorizontal: 20,
+  },
+  view: {
+    marginBottom: 60,
+
+    backgroundColor: '#fff',
+  },
+  itemContainer: {
+    flexDirection: 'row',
+    height: 50,
     marginBottom: 40,
   },
   thumbnail: {
@@ -79,5 +122,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: '#888',
   },
-  iconContainer: { fontSize: 12, color: '#888' },
+  iconContainer: {
+    flexDirection: 'row',
+  },
 });

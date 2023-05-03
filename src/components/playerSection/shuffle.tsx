@@ -31,16 +31,12 @@ export const Shuffle: React.FC<Props> = () => {
   return (
     <Animated.View style={[styles.container, style]}>
       <TouchableOpacity onPress={onPress}>
-        <MaterialIcons name="shuffle" />
+        <MaterialIcons name="shuffle" size={36} color="#FFFFFFDE" />
       </TouchableOpacity>
     </Animated.View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    position: 'absolute',
-    bottom: 0,
-    left: 40,
-  },
+  container: {},
 });

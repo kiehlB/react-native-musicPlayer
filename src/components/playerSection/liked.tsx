@@ -30,16 +30,12 @@ export const Liked: React.FC<Props> = () => {
   return (
     <Animated.View style={[styles.container, style]}>
       <TouchableOpacity onPress={onPress}>
-        <AntDesign name="hearto" size={24} color="black" />
+        <AntDesign name="hearto" size={36} color="#FFFFFFDE" />
       </TouchableOpacity>
     </Animated.View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    position: 'absolute',
-    bottom: 0,
-    right: 40,
-  },
+  container: {},
 });

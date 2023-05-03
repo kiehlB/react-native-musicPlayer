@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { StyleSheet } from 'react-native';
-import AppBar from '../appBar';
-import { View } from './theme';
+import { View } from './common/theme';
+import AppBar from './appBar';
 
 export type AppTitleProps = {};
 

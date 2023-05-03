@@ -1,9 +1,9 @@
-export function timeFormat(value: any) {
+export function timeFormat(value: number | null): string {
   if (value === null) {
     return '--:--';
   }
 
-  value = value.toFixed();
+  value = Math.floor(value);
 
   const second = (Math.floor(value % 60) < 10 ? '0' : '') + Math.floor(value % 60);
 
@@ -12,8 +12,7 @@ export function timeFormat(value: any) {
   let hours: number | string = '00';
 
   if (minutes < 10) {
-    // @ts-ignore
-    minutes = '0' + minutes;
+    minutes = 0 + minutes;
   }
 
   if (minutes >= 60) {
@@ -21,8 +20,7 @@ export function timeFormat(value: any) {
     minutes = minutes % 60;
 
     if (minutes < 10) {
-      // @ts-ignore
-      minutes = '0' + minutes;
+      minutes = 0 + minutes;
     }
   }
 

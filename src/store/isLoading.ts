@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction, createSelector } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface IsLoadingState {
   isLoading: string;

@@ -20,19 +20,19 @@ export const CustomTabBar = (props: BottomTabBarProps): JSX.Element => {
       return;
     }
     setShowMusicBar(false);
-  }, [playbackState]);
+  }, []);
 
-  if (
-    showMusicBar &&
-    [SCREENS.SEARCH, SCREENS.HOME].includes(currentTabScreen as SCREENS)
-  ) {
-    return (
-      <>
-        <Player />
-        <BottomTabBar {...props} />
-      </>
-    );
-  }
+  // if (
+  //   showMusicBar &&
+  //   [SCREENS.SEARCH, SCREENS.HOME].includes(currentTabScreen as SCREENS)
+  // ) {
+  //   return (
+  //     <>
+  //       <Player />
+  //       <BottomTabBar {...props} />
+  //     </>
+  //   );
+  // }
 
   return (
     <>

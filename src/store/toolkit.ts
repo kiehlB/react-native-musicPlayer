@@ -1,19 +1,11 @@
 import * as MediaLibrary from 'expo-media-library';
 import { Alert } from 'react-native';
-import { AppThunk } from './store';
-import { Audio, AVPlaybackStatus } from 'expo-av';
+import { Audio } from 'expo-av';
 import { setSongs } from './songs';
 import { setLoadingState } from './isLoading';
-import {
-  setBuffering,
-  setCurrentId,
-  setCurrentPosition,
-  setPlaybackInstance,
-  setPlaying,
-} from './audio';
-import SettingsST from '../lib/settingsST';
-import { AnyAction, ThunkAction, ThunkDispatch } from '@reduxjs/toolkit';
+import { AnyAction, ThunkDispatch } from '@reduxjs/toolkit';
 import { RootState } from './rootReducer';
+import TrackPlayer from 'react-native-track-player';
 
 export const InitializeApp =
   (): any => async (dispatch: ThunkDispatch<RootState, any, AnyAction>) => {
@@ -42,79 +34,40 @@ export const InitializeApp =
       playThroughEarpieceAndroid: false,
     });
 
-    const audios = (
-      await MediaLibrary.getAssetsAsync({
-        mediaType: 'audio',
-        first: 99999999,
-      })
-    ).assets;
+    const getAudios = await MediaLibrary.getAssetsAsync({
+      mediaType: 'audio',
+      first: 99999999,
+    });
 
-    audios.sort((s1: any, s2: any) => {
+    async function getAlbumArtImageUri(albumId: string): Promise<string | null> {
+      const images = await MediaLibrary.getAssetsAsync({
+        album: albumId,
+        mediaType: 'photo',
+      });
+      return images.assets.length ? images.assets[0].uri : null;
+    }
+
+    const albumArtPromises = getAudios.assets.map(async audio => {
+      const albumArtUri = audio.albumId ? await getAlbumArtImageUri(audio.albumId) : null;
+      return { ...audio, albumArtUri };
+    });
+
+    const audios = await Promise.all(albumArtPromises);
+
+    audios.sort((s1, s2) => {
       return s1?.filename.toLowerCase().localeCompare(s2?.filename.toLowerCase());
     });
 
+    const tracksToAdd = audios.map(song => ({
+      id: song.id,
+      url: song.uri,
+      title: song.filename,
+      duration: song.duration,
+    }));
+
     dispatch(setSongs(audios));
+
+    await TrackPlayer.add(tracksToAdd);
 
     dispatch(setLoadingState('resovle'));
   };
-
-export const LoadSong =
-  (id: string, shouldPlay: boolean = false): AppThunk =>
-  async (dispatch, getState) => {
-    dispatch(setCurrentId(id));
-
-    const {
-      audio: { isPlaying, volume, playbackInstance: prevPlaybackInstance },
-      audios: { audios },
-    }: any = getState();
-
-    await prevPlaybackInstance?.unloadAsync();
-
-    const playbackInstance = new Audio.Sound();
-
-    playbackInstance.setOnPlaybackStatusUpdate((playbackStatus: AVPlaybackStatus) => {
-      if (!playbackStatus.isLoaded) {
-        if (playbackStatus.error) {
-          console.log(
-            `Encountered a fatal error during playback: ${playbackStatus.error}`,
-          );
-        }
-      } else {
-        dispatch(setBuffering(playbackStatus.isBuffering));
-        dispatch(setCurrentPosition(playbackStatus.positionMillis));
-
-        if (playbackStatus.didJustFinish && !playbackStatus.isLooping)
-          dispatch(NextTrack());
-        if (
-          playbackStatus.shouldPlay &&
-          !playbackStatus.isPlaying &&
-          playbackStatus.isLoaded &&
-          !playbackStatus.isBuffering &&
-          !playbackStatus.didJustFinish
-        )
-          playbackInstance.playAsync();
-      }
-    });
-    await playbackInstance.loadAsync(
-      {
-        uri: audios.find((song: { id: string }) => song.id === id)!.uri,
-      },
-      {
-        shouldPlay: isPlaying || shouldPlay,
-        volume,
-      },
-    );
-
-    dispatch(setPlaying(isPlaying || shouldPlay));
-
-    dispatch(setPlaybackInstance(playbackInstance));
-  };
-
-export const NextTrack = (): AppThunk => async (dispatch, getState) => {
-  const {
-    audio: { currentId },
-  } = getState() as any;
-  const nextSong = SettingsST.getInstance().getNext(currentId) as any;
-
-  dispatch(LoadSong(nextSong.id, true));
-};

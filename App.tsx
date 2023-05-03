@@ -9,10 +9,13 @@ import { Provider as PaperProvider } from 'react-native-paper';
 import { Provider } from 'react-redux';
 
 import { BottomBarScreenNavigator } from './src/navigation/navBar';
-import store from './src/store/store';
+import store, { persistor } from './src/store/store';
 import ErrorBoundary from './src/components/common/errorBoundary';
 import { theme } from './src/lib/colors';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { ColorSchemeProvider } from './src/context/colorSchemeContext';
+import { PersistGate } from 'redux-persist/integration/react';
+import { Text } from './src/components/common/theme';
 
 const playerCapabilities = [
   Capability.Play,
@@ -59,16 +62,20 @@ function App(): JSX.Element {
     <SafeAreaProvider>
       <ErrorBoundary fallback={<p>Something went wrong</p>}>
         <Provider store={store}>
-          <PaperProvider>
-            <StatusBar
-              barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-              backgroundColor={backgroundStyle.backgroundColor}
-            />
+          <PersistGate loading={<Text>Loading...</Text>} persistor={persistor}>
+            <ColorSchemeProvider>
+              <PaperProvider>
+                <StatusBar
+                  barStyle={isDarkMode ? 'light-content' : 'dark-content'}
+                  backgroundColor={backgroundStyle.backgroundColor}
+                />
 
-            <GestureHandlerRootView style={{ flex: 1 }}>
-              <BottomBarScreenNavigator />
-            </GestureHandlerRootView>
-          </PaperProvider>
+                <GestureHandlerRootView style={{ flex: 1 }}>
+                  <BottomBarScreenNavigator />
+                </GestureHandlerRootView>
+              </PaperProvider>
+            </ColorSchemeProvider>
+          </PersistGate>
         </Provider>
       </ErrorBoundary>
     </SafeAreaProvider>

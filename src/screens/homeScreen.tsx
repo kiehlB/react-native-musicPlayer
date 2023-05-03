@@ -1,18 +1,17 @@
 import React, { useEffect } from 'react';
-import { StyleSheet } from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
-import { InitializeApp } from '../store/toolkit';
+import { Button, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Text, View } from '../components/common/theme';
+import { Text, View, useThemeColor } from '../components/common/theme';
 import PlayList from '../components/playList/playList';
-import { RootState } from '../store/rootReducer';
 
 export type HomeScreenProps = {};
 
 export default function HomeScreen(props: HomeScreenProps) {
+  const backgroundColor = useThemeColor({}, 'background');
+
   return (
     <SafeAreaView>
-      <View style={styles.container}>
+      <View style={[styles.container, { backgroundColor }]}>
         <View style={styles.musicContainer}>
           <PlayList />
         </View>

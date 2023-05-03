@@ -1,21 +1,12 @@
-import React, { useEffect } from 'react';
-import {
-  Animated,
-  FlatList,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useCallback } from 'react';
+import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useSelector } from 'react-redux';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import AntDesign from 'react-native-vector-icons/AntDesign';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import TrackPlayer from 'react-native-track-player';
-import Menu from '../common/menu';
 
-interface Song {
+import Menu from '../common/menu';
+import PlayListItem from './plyListItem';
+
+export interface Song {
   filename: string;
   album: string | undefined;
   artist: string | undefined;
@@ -23,57 +14,7 @@ interface Song {
   id: string;
   isExcluded: boolean;
   uri: string;
-  duration: any;
-}
-
-interface SongItemProps {
-  item: Song;
-}
-
-class SongItem extends React.PureComponent<SongItemProps> {
-  handlePress = async () => {
-    const { id, uri } = this.props.item;
-
-    await TrackPlayer.reset();
-    await TrackPlayer.add({
-      id,
-      url: uri,
-      title: this.props.item.filename,
-      artist: this.props.item.artist || 'unknown',
-      artwork: 'http://example.com/songs/artwork.jpg',
-    });
-
-    // Play the song
-    await TrackPlayer.play();
-  };
-
-  render() {
-    const { filename, album, artist, genre, id } = this.props.item;
-
-    return (
-      <TouchableOpacity style={styles.itemContainer} onPress={this.handlePress}>
-        <View style={styles.thumbnail}>
-          <MaterialIcons name="audiotrack" size={24} color="black" />
-        </View>
-        <View style={styles.textContainer}>
-          <Text style={styles.title} numberOfLines={1} ellipsizeMode="tail">
-            {filename}
-          </Text>
-          <Text style={styles.artist}>
-            {album || 'unknown'} - {artist || 'unknown'}
-          </Text>
-        </View>
-        <View style={styles.rightContainer}>
-          <View style={styles.iconContainer}>
-            <View style={{ marginRight: 12, marginLeft: 12 }}>
-              <AntDesign name="hearto" size={24} color="black" />
-            </View>
-            <MaterialCommunityIcons name="dots-vertical" size={24} color="black" />
-          </View>
-        </View>
-      </TouchableOpacity>
-    );
-  }
+  duration: string;
 }
 
 const PlayList = () => {
@@ -81,17 +22,21 @@ const PlayList = () => {
     songs.filter(({ isExcluded }: any) => !isExcluded),
   );
 
-  const renderItem = ({ item }: { item: Song }) => <SongItem item={item} />;
-  const keyExtractor = ({ id }: { id: string }) => id;
+  const renderItem = useCallback(
+    ({ item }: { item: Song }) => <PlayListItem item={item} allSongs={songs} />,
+    [songs],
+  );
+  const keyExtractor = useCallback(({ id }: { id: string }) => id, []);
 
   const ITEM_HEIGHT = 90;
-  const getItemLayout = (data: any, index: any) => {
-    return {
+  const getItemLayout = useCallback(
+    (_: any, index: number) => ({
       length: ITEM_HEIGHT,
-      offset: ITEM_HEIGHT * index, // idx, not data.length
+      offset: ITEM_HEIGHT * index,
       index,
-    };
-  };
+    }),
+    [],
+  );
 
   return (
     <View style={styles.container}>

@@ -9,7 +9,7 @@ import Animated, {
   useAnimatedStyle,
   useAnimatedGestureHandler,
 } from 'react-native-reanimated';
-import { MiniSlider } from './position';
+
 import { WIDTH, HEIGHT, BOTTOM_INSET, SNAP_TOP, SNAP_BOTTOM } from '../../lib/dimensions';
 
 import { Actions } from './actions';
@@ -19,21 +19,14 @@ import { Context } from '../../context/animationContext';
 import { PanGestureHandler, TapGestureHandler } from 'react-native-gesture-handler';
 import { Section } from '../playerSection';
 import { NextPrev } from './arrow';
+import { MiniSlider } from './miniSlider';
+import { PlayerHeader } from './playerHeader';
+import { View } from '../common/theme';
+import { Shuffle } from '../playerSection/shuffle';
+import { Liked } from '../playerSection/liked';
+import { Repeat } from '../playerSection/repeat';
 
 export const Player = () => {
-  const { duration } = useProgress();
-
-  useEffect(() => {
-    const getTrack = async () => {
-      const trackIndex = (await TrackPlayer.getCurrentTrack()) as any;
-      const trackObject = (await TrackPlayer.getTrack(trackIndex)) as any;
-      console.log(`Title: ${trackObject?.title}`);
-      console.log(`duration' ${trackObject?.duration}`);
-    };
-
-    getTrack();
-  }, [duration]);
-
   const translateY = useSharedValue(SNAP_BOTTOM - 40);
 
   const tapGestureHandler = useAnimatedGestureHandler({
@@ -114,12 +107,17 @@ export const Player = () => {
       <Animated.View style={[styles.container, style]}>
         {/* @ts-ignore */}
         <TapGestureHandler onGestureEvent={tapGestureHandler}>
-          <Animated.View
-            style={{ width: '100%', height: '100%', backgroundColor: '#fff' }}>
+          <Animated.View style={{ width: '100%', height: '15%' }}>
             <PanGestureHandler onGestureEvent={gestureHandler}>
               <Animated.View style={styles.overlay}>
                 <MiniSlider />
+                <PlayerHeader />
                 <Section />
+                <View style={styles.iconsContainer}>
+                  <Shuffle />
+                  <Liked />
+                  <Repeat />
+                </View>
                 <Actions />
                 <NextPrev />
               </Animated.View>
@@ -145,6 +143,13 @@ const styles = StyleSheet.create({
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    backgroundColor: 'rgb(27, 35, 35)',
+  },
+  iconsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 24,
+    backgroundColor: 'rgb(27, 35, 35)',
   },
 });

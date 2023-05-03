@@ -25,9 +25,6 @@ export const Section = () => {
       <Record {...{ offsetY }} />
       <Slider {...{ isTouching, setTouching, setTime }} />
       <Duration {...{ time, isTouching }} />
-      <Liked />
-      <Shuffle />
-      <Repeat />
     </View>
   );
 };
@@ -38,4 +35,13 @@ const styles = StyleSheet.create({
     height: SECTION_HEIGHT,
     justifyContent: 'flex-end',
   },
+  iconsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+
+    paddingHorizontal: 24,
+  },
+  icon: {},
+  iconCenter: {},
 });
